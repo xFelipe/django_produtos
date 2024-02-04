@@ -1,0 +1,26 @@
+{% extends "base/base.html" %}
+{% load bootstrap4 %}
+
+
+{% block head %}
+    <title>Contato</title>
+    {% bootstrap_css %}
+{% endblock head %}
+
+
+{% block body %}
+    <div class="container">
+        <h1>Contato</h1>
+        {% bootstrap_messages %}
+
+        <form action="{% url 'contact' %}" method="POST" class="form", autocomplete="off" autocomplete="off">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            {% endbuttons %}
+        </form>
+    </div>
+    
+{% bootstrap_javascript jquery='full' %}
+{% endblock body %}
