@@ -15,7 +15,7 @@ class Base(models.Model):
         abstract = True
 
 class Product(Base):
-    name = models.CharField('Nome', max_length=100)
+    name = models.CharField('Nome', max_length=100, unique=True)
     price = models.DecimalField('Preço', max_digits=10, decimal_places=2)
     stock = models.IntegerField('Estoque')
     image = StdImageField('Imagem', upload_to='uploads/produtos', variations={'thumb': (124, 124)})
@@ -23,6 +23,9 @@ class Product(Base):
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        verbose_name = 'Produto'
 
 
 def produto_pre_save(signal, instance: Product, sender, **kwargs):
