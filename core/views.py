@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from .forms import ContactForm, ProductModelForm
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.shortcuts import redirect
 from .models import Product
 
 
@@ -17,26 +19,27 @@ def contact(request):
             form.send_mail()
 
             messages.success(request, "E-mail enviado com sucesso!")
-            # form = ContactForm()
+            form = ContactForm() # Reset form
         else:
             messages.error(request, "Formulário inválido")
-    context = {
+
+    return render(request, 'core/contact.html', context={
         'form': form
-    }
-    return render(request, 'core/contact.html', context)
+    })
 
 def product(request):
+    if not request.user.is_authenticated:
+        return redirect('index')
+
+    form = ProductModelForm(request.POST or None, request.FILES or None)
     if request.method == 'POST':
-        form = ProductModelForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
 
             messages.success(request, "Produto salvo com sucesso!")
-            # form = ProductModelForm()
+            form = ProductModelForm() # Reset form
         else:
             messages.error(request, "Erro ao salvar produto")
-    else:
-        form = ProductModelForm()
 
     return render(request, 'core/product.html', context={
         'form': form
